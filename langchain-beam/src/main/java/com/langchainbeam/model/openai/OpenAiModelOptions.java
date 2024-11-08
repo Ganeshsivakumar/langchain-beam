@@ -4,8 +4,20 @@ import java.util.List;
 
 import com.langchainbeam.model.LangchainModelOptions;
 
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import lombok.Builder;
 
+/**
+ * Configuration options for building an OpenAI model within the LangChain
+ * framework.
+ * <p>
+ * This class extends {@link LangchainModelOptions} and provides specific
+ * configuration options
+ * required for interacting with OpenAI models, such as model name, API key,
+ * temperature, max tokens
+ * to create and configure an {@link OpenAiChatModel}.
+ * </p>
+ */
 public class OpenAiModelOptions extends LangchainModelOptions {
     private String modelName;
     private String apiKey;
@@ -32,6 +44,11 @@ public class OpenAiModelOptions extends LangchainModelOptions {
         this.logResponses = logResponses;
     }
 
+    /**
+     * Returns the builder class used to construct Model.
+     * 
+     * @return the {@link OpenAiModelBuilder} class
+     */
     @Override
     public Class<OpenAiModelBuilder> getModelBuilderClass() {
         return OpenAiModelBuilder.class;
