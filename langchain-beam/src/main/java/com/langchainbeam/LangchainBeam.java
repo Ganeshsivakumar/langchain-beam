@@ -29,8 +29,7 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
  * 
  * @param <T> the type of elements in the input {@link PCollection}
  * 
- *            *
- *            <h3>Example usage:</h3>
+ *            Example usage:
  * 
  *            <pre>
  *            // Define the instruction prompt to process the element
@@ -45,14 +44,13 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
  *            // Initialize LangchainModelHandler
  *            LangchainModelHandler handler = new LangchainModelHandler(modelOptions, prompt);
  * 
- *            // create the pipeline
+ *            // Create the pipeline
  *            Pipeline p = Pipeline.create();
  * 
  *            // Apply LangchainBeam transform in the pipeline
  *            p.apply(TextIO.read().from("path/to/product_reviews.csv"))
  *                    .apply(LangchainBeam.run(handler)) // Run model handler
  *                    .apply(ParDo.of(new DoFn<String, Void>() {
- *                        &#64;ProcessElement
  *                        public void processElement(@Element String output) {
  *                            System.out.println("Model Output: " + output);
  *                        }
