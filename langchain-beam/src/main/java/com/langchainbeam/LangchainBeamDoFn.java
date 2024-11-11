@@ -3,6 +3,7 @@ package com.langchainbeam;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.beam.sdk.transforms.DoFn;
+import org.apache.beam.sdk.values.PCollection;
 
 import com.langchainbeam.model.LangchainModelBuilder;
 import com.langchainbeam.model.LangchainModelOptions;

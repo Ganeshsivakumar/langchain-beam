@@ -2,6 +2,8 @@ package com.langchainbeam;
 
 import java.io.Serializable;
 
+import org.apache.beam.sdk.values.PCollection;
+
 import com.langchainbeam.model.LangchainModelOptions;
 
 /**
