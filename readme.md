@@ -11,11 +11,39 @@ The goal is to combine the apache beam's abstraction with the capabilities of La
 
 ![Pipeline Diagram](docs/langchainbeam.png)
 
-## Usage
+## Getting Started
 
-1. Start by creating `modelOptions` for the model and provider, specifying parameters like temperature, maxTokens, and other settings.
-2. Define the `instructionPrompt` that the model will use to process each input the `PCollection` element.
-3. Pass `modelOptions` and `instructionPrompt` to the `LangchainModelHandler`, which serves as input to LangchainBeam PTransform. You can then apply the transformation using `LangchainBeam.run(modelHandler)`.
+Include **Langchain-Beam** as dependency in `pom.xml`.
+Additionally, ensure you have the required Apache Beam dependencies in your project.
+
+```xml
+<dependency>
+    <groupId>io.github.ganeshsivakumar</groupId>
+    <artifactId>langchain-beam</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
+import required modules
+
+```java
+import com.langchainbeam.LangchainBeam;
+import com.langchainbeam.LangchainModelHandler;
+
+// import the model options class based on the model provider
+// that you want to use. Additional providers will be integrated in future releases.
+import com.langchainbeam.model.openai.OpenAiModelOptions;
+```
+
+## Steps to Use Langchain-Beam
+
+1. **Create Model Options**  
+   Define the `modelOptions` based on the model provider you’re using, configuring parameters such as temperature, max tokens, and other relevant settings.
+2. **Define the Instruction Prompt**  
+   Create an `instructionPrompt` that will guide the model on how to process each `PCollection` input element.
+
+3. **Apply the LangchainBeam PTransform**  
+   Pass the `modelOptions` and `instructionPrompt` to the `LangchainModelHandler`. Use this handler as input to the `LangchainBeam` PTransform, which can then be applied in the pipeline with `LangchainBeam.run(modelHandler)`.
 
 Example:
 
