@@ -1,10 +1,12 @@
 package com.langchainbeam;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.apache.beam.sdk.values.PCollection;
 
 import com.langchainbeam.model.LangchainModelOptions;
+import com.langchainbeam.utils.JsonUtils;
 
 /**
  * A handler class for managing LangChain model options and instruction prompts.
@@ -25,6 +27,7 @@ public class LangchainModelHandler implements Serializable {
 
     private final LangchainModelOptions options;
     private final String instructionPrompt;
+    private String outputFormat;
 
     /**
      * Constructs a new {@link LangchainModelHandler} with the specified model
@@ -38,6 +41,28 @@ public class LangchainModelHandler implements Serializable {
     public LangchainModelHandler(LangchainModelOptions options, String instructionPrompt) {
         this.options = options;
         this.instructionPrompt = instructionPrompt;
+
+    }
+
+    /**
+     * Constructs a new {@link LangchainModelHandler} with the specified model
+     * options, instruction prompt, and output format.
+     * 
+     * @param options           the {@link LangchainModelOptions} containing model
+     *                          configurations
+     * @param instructionPrompt the instruction prompt to guide the model on
+     *                          processing the element.
+     *                          Note: Instruct to respond in JSON to get output
+     *                          as a JSON string. Use out `outputFormat` Map to
+     *                          specify the format
+     * @param outputFormat      the desired output format, represented as a
+     *                          map of keys and values as description
+     */
+    public LangchainModelHandler(LangchainModelOptions options, String instructionPrompt,
+            Map<String, String> outputFormat) {
+        this.options = options;
+        this.instructionPrompt = instructionPrompt;
+        setOutputFormat(outputFormat);
 
     }
 
@@ -59,5 +84,14 @@ public class LangchainModelHandler implements Serializable {
      */
     public String getPrompt() {
         return instructionPrompt;
+    }
+
+    private void setOutputFormat(Map<String, String> outputFormat) {
+        this.outputFormat = JsonUtils.mapToJson(outputFormat);
+
+    }
+
+    String getOutputFormat() {
+        return outputFormat;
     }
 }

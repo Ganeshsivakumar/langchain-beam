@@ -4,6 +4,7 @@ import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.PCollection;
 
+import com.langchainbeam.model.LangchainBeamOutput;
 import com.langchainbeam.model.LangchainModelOptions;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -58,7 +59,7 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
  *            p.run(); // Execute the pipeline
  *            </pre>
  */
-public class LangchainBeam<T> extends PTransform<PCollection<T>, PCollection<String>> {
+public class LangchainBeam<T> extends PTransform<PCollection<String>, PCollection<LangchainBeamOutput>> {
     private final LangchainModelHandler handler;
 
     private LangchainBeam(LangchainModelHandler handler) {
@@ -77,7 +78,7 @@ public class LangchainBeam<T> extends PTransform<PCollection<T>, PCollection<Str
      *         outputs for each input element
      */
     @Override
-    public PCollection<String> expand(PCollection<T> input) {
+    public PCollection<LangchainBeamOutput> expand(PCollection<String> input) {
         return input.apply("LangchainBeam Model Transform", ParDo.of(new LangchainBeamDoFn<>(handler)));
     }
 
@@ -96,7 +97,8 @@ public class LangchainBeam<T> extends PTransform<PCollection<T>, PCollection<Str
      * @return a new instance of {@link LangchainBeam}
      * @throws IllegalArgumentException if the handler is {@code null}
      */
-    public static <T> LangchainBeam<T> run(LangchainModelHandler handler) {
+    public static PTransform<PCollection<String>, PCollection<LangchainBeamOutput>> run(
+            LangchainModelHandler handler) {
         if (handler == null) {
             throw new IllegalArgumentException("Handler cannot be null");
         }

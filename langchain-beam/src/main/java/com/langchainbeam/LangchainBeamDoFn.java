@@ -1,10 +1,12 @@
 package com.langchainbeam;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.values.PCollection;
 
+import com.langchainbeam.model.LangchainBeamOutput;
 import com.langchainbeam.model.LangchainModelBuilder;
 import com.langchainbeam.model.LangchainModelOptions;
 import com.langchainbeam.model.ModelPrompt;
@@ -25,13 +27,14 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
  *
  * @param <T> the type of input elements in the {@link PCollection}
  */
-class LangchainBeamDoFn<T> extends DoFn<T, String> {
+class LangchainBeamDoFn<T> extends DoFn<String, LangchainBeamOutput> {
 
     private final LangchainModelHandler handler;
     // private final SerializableFunction<String, T> modelOutputCallback;
     private ChatLanguageModel model;
     private LangchainModelBuilder modelBuilder;
     private String modelOutput;
+    private String modelOutputFormat;
 
     /**
      * Constructs a new {@link LangchainBeamDoFn} with the specified
@@ -66,7 +69,7 @@ class LangchainBeamDoFn<T> extends DoFn<T, String> {
                 | SecurityException | InvocationTargetException e) {
             throw new Exception("Failed to set up Langchain model due to instantiation error: ", e);
         }
-
+        modelOutputFormat = Objects.requireNonNullElse(handler.getOutputFormat(), "Plain text");
         modelBuilder.setOptions(options);
         model = modelBuilder.build();
 
@@ -88,17 +91,20 @@ class LangchainBeamDoFn<T> extends DoFn<T, String> {
      */
     @ProcessElement
     public void processElement(ProcessContext context) {
-        T input = context.element();
+        String input = context.element();
 
-        final String finalPrompt = String.format(ModelPrompt.PROMPT, input.toString(), handler.getPrompt());
+        final String finalPrompt = String.format(ModelPrompt.PROMPT, input, handler.getPrompt(),
+                modelOutputFormat);
+
         try {
             modelOutput = model.generate(finalPrompt);
 
         } catch (Exception e) {
             throw e;
         }
-
-        context.output(modelOutput);
+        LangchainBeamOutput lbModelOutput = LangchainBeamOutput.builder().inputElement(input)
+                .output(modelOutput).build();
+        context.output(lbModelOutput);
     }
 
 }
