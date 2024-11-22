@@ -11,7 +11,9 @@ import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;
 import org.apache.beam.sdk.transforms.Create;
+import org.apache.beam.sdk.transforms.MapElements;
 import org.apache.beam.sdk.values.PCollection;
+import org.apache.beam.sdk.values.TypeDescriptor;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
@@ -21,6 +23,7 @@ import org.junit.rules.ExpectedException;
 import com.langchainbeam.fakes.FakeChatModel;
 import com.langchainbeam.fakes.FakeModelBuilder;
 import com.langchainbeam.fakes.FakeModelOptions;
+import com.langchainbeam.model.LangchainBeamOutput;
 import com.langchainbeam.model.openai.OpenAiModelOptions;
 
 import dev.ai4j.openai4j.OpenAiHttpException;
@@ -49,9 +52,14 @@ public class LangchainBeamTest {
 
         String inputElement = "input pcollection element";
 
-        PCollection<String> modelOutput = p.apply(Create.of(inputElement)).apply(LangchainBeam.run(handler));
+        PCollection<LangchainBeamOutput> modelOutput = p.apply(Create.of(inputElement))
+                .apply(LangchainBeam.run(handler));
 
-        PAssert.that(modelOutput).containsInAnyOrder(output);
+        PCollection<String> extractedOutputs = modelOutput.apply(MapElements
+                .into(TypeDescriptor.of(String.class))
+                .via((LangchainBeamOutput outputElement) -> outputElement.getOutput()));
+
+        PAssert.that(extractedOutputs).containsInAnyOrder(output);
 
         p.run().waitUntilFinish();
 
@@ -64,9 +72,14 @@ public class LangchainBeamTest {
         List<String> expectedOutputs = Arrays.asList("fake model response", "fake model response",
                 "fake model response");
 
-        PCollection<String> modelOutput = p.apply(Create.of(inputs)).apply(LangchainBeam.run(handler));
+        PCollection<LangchainBeamOutput> modelOutput = p.apply(Create.of(inputs))
+                .apply(LangchainBeam.run(handler));
 
-        PAssert.that(modelOutput).containsInAnyOrder(expectedOutputs);
+        PCollection<String> extractedOutputs = modelOutput.apply(MapElements
+                .into(TypeDescriptor.of(String.class))
+                .via((LangchainBeamOutput outputElement) -> outputElement.getOutput()));
+
+        PAssert.that(extractedOutputs).containsInAnyOrder(expectedOutputs);
 
         p.run().waitUntilFinish();
     }
