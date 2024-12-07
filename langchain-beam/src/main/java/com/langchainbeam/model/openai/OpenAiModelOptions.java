@@ -18,30 +18,39 @@ import lombok.Builder;
  * to create and configure an {@link OpenAiChatModel}.
  * </p>
  */
+@SuppressWarnings("FieldMayBeFinal")
 public class OpenAiModelOptions extends LangchainModelOptions {
     private String modelName;
     private String apiKey;
     private Double temperature;
     private Double topP;
     private List<String> stop;
-    private Integer maxTokens;
     private Integer maxCompletionTokens;
-    private Boolean logRequests;
-    private Boolean logResponses;
 
+    /**
+     * Constructs an instance of {@code OpenAiModelOptions} with the specified
+     * configuration settings.
+     *
+     * @param apiKey              The API key for authenticating requests to the
+     *                            OpenAI API.
+     * @param modelName           The name of the model to use.
+     * @param temperature         The temperature value for controlling randomness
+     *                            in output.
+     * @param topP                The top-p value for nucleus sampling.
+     * @param stop                A list of stop sequences to terminate the
+     *                            generation.
+     * @param maxCompletionTokens The maximum number of tokens to generate in the
+     *                            completion.
+     */
     @Builder
     public OpenAiModelOptions(String apiKey, String modelName, Double temperature, Double topP, List<String> stop,
-            Integer maxTokens, Integer maxCompletionTokens,
-            Boolean logRequests, Boolean logResponses) {
+            Integer maxCompletionTokens) {
         this.modelName = modelName;
         this.apiKey = apiKey;
         this.temperature = temperature;
         this.topP = topP;
         this.stop = stop;
-        this.maxTokens = maxTokens;
         this.maxCompletionTokens = maxCompletionTokens;
-        this.logRequests = logRequests;
-        this.logResponses = logResponses;
     }
 
     /**
@@ -74,20 +83,8 @@ public class OpenAiModelOptions extends LangchainModelOptions {
         return stop;
     }
 
-    public Integer getMaxTokens() {
-        return maxTokens;
-    }
-
     public Integer getMaxCompletionTokens() {
         return maxCompletionTokens;
-    }
-
-    public Boolean getLogRequests() {
-        return logRequests;
-    }
-
-    public Boolean getLogResponses() {
-        return logResponses;
     }
 
 }

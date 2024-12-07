@@ -55,10 +55,7 @@ public class OpenAiModelBuilder implements LangchainModelBuilder {
                 .temperature(options.getTemperature())
                 .topP(options.getTopP())
                 .stop(options.getStop())
-                .maxTokens(options.getMaxTokens())
                 .maxCompletionTokens(options.getMaxCompletionTokens())
-                .logRequests(options.getLogRequests())
-                .logResponses(options.getLogResponses())
                 .build();
     }
 
