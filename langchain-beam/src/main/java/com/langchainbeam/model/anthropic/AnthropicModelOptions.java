@@ -9,12 +9,12 @@ import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import lombok.Builder;
 
 /**
- * Configuration options for building an OpenAI model within the LangChain
- * framework.
+ * Configuration options for building an Anthropic model within
+ * LangChain-Beam
  * <p>
  * This class extends {@link LangchainModelOptions} and provides specific
  * configuration options
- * required for interacting with OpenAI models, such as model name, API key,
+ * required for interacting with Anthropic models, such as model name, API key,
  * temperature, max tokens
  * to create and configure an {@link AnthropicChatModel}.
  * </p>
