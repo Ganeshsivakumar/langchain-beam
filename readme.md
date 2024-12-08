@@ -69,8 +69,8 @@ p.apply(TextIO.read().from("/home/ganesh/Downloads/product_reviews.csv")) // loa
         .apply(LangchainBeam.run(handler))  // Run the model handler using LangchainBeam
         .apply(ParDo.of(new DoFn<String, Void>() {
             @ProcessElement
-            public void processElement(@Element String output) {
-                System.out.println("Model Output: " + output);  // Print model output
+            public void processElement(@Element LangchainBeamOutput out) {
+                System.out.println("Model Output: " + out.getOutput());  // Print model output
             }
         }));
 
