@@ -1,0 +1,42 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #ff8337;
+  /* Beam Red */
+  --ifm-color-primary-dark: #f26628;
+  /* Beam Orange 1 */
+  --ifm-color-primary-darker: #ff8337;
+  /* Beam Orange 2 */
+  --ifm-color-primary-darkest: #febb25;
+  /* Beam Yellow-Orange */
+  --ifm-color-primary-light: #feec2d;
+  /* Beam Yellow 1 */
+  --ifm-color-primary-lighter: #ffec2d;
+  /* Beam Yellow 2 */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(231, 77, 26, 0.1);
+  /* Beam Red with transparency */
+}
+
+/* Adjust for Dark Mode */
+[data-theme='dark'] {
+  --ifm-color-primary: #ff8337;
+  /* Beam Orange 2 */
+  --ifm-color-primary-dark: #febb25;
+  /* Beam Yellow-Orange */
+  --ifm-color-primary-darker: #feec2d;
+  /* Beam Yellow */
+  --ifm-color-primary-darkest: #ffec2d;
+  /* Beam Yellow 2 */
+  --ifm-color-primary-light: #f26628;
+  /* Beam Orange 1 */
+  --ifm-color-primary-lighter: #e74d1a;
+  /* Beam Red */
+  --docusaurus-highlighted-code-line-bg: rgba(255, 131, 55, 0.3);
+  /* Beam Orange 2 with transparency */
+}
