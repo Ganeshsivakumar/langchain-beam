@@ -2,7 +2,6 @@ package com.langchainbeam.model.anthropic;
 
 import java.time.Duration;
 
-import com.langchainbeam.model.LangchainModelBuilder;
 import com.langchainbeam.model.LangchainModelOptions;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
@@ -47,6 +46,7 @@ public class AnthropicModelOptions extends LangchainModelOptions {
     @Builder
     public AnthropicModelOptions(String modelName, String apiKey, Double temperature, Double topP, int topK,
             int maxTokens, Duration timeout) {
+        super(AnthropicModelBuilder.class);
         this.modelName = modelName;
         this.apiKey = apiKey;
         this.temperature = temperature;
@@ -55,16 +55,6 @@ public class AnthropicModelOptions extends LangchainModelOptions {
         this.maxTokens = maxTokens;
         this.timeout = timeout;
 
-    }
-
-    /**
-     * Returns the builder class used to construct Model.
-     * 
-     * @return the {@link AnthropicModelBuilder} class
-     */
-    @Override
-    public Class<? extends LangchainModelBuilder> getModelBuilderClass() {
-        return AnthropicModelBuilder.class;
     }
 
     public String getModelName() {
