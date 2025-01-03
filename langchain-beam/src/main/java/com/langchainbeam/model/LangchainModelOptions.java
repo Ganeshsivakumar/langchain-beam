@@ -7,7 +7,13 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
  */
 public class LangchainModelOptions implements BaseModelOptions {
 
+    private final Class<? extends LangchainModelBuilder> builder;
+
+    public LangchainModelOptions(Class<? extends LangchainModelBuilder> builder) {
+        this.builder = builder;
+    }
+
     public Class<? extends LangchainModelBuilder> getModelBuilderClass() {
-        return null;
+        return builder;
     }
 }

@@ -44,22 +44,13 @@ public class OpenAiModelOptions extends LangchainModelOptions {
     @Builder
     public OpenAiModelOptions(String apiKey, String modelName, Double temperature, Double topP, List<String> stop,
             Integer maxCompletionTokens) {
+        super(OpenAiModelBuilder.class);
         this.modelName = modelName;
         this.apiKey = apiKey;
         this.temperature = temperature;
         this.topP = topP;
         this.stop = stop;
         this.maxCompletionTokens = maxCompletionTokens;
-    }
-
-    /**
-     * Returns the builder class used to construct Model.
-     * 
-     * @return the {@link OpenAiModelBuilder} class
-     */
-    @Override
-    public Class<OpenAiModelBuilder> getModelBuilderClass() {
-        return OpenAiModelBuilder.class;
     }
 
     public String getModelName() {

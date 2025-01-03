@@ -9,6 +9,7 @@ import lombok.Builder;
 /**
  * Fake model options for @link FakeChatModel}
  */
+@SuppressWarnings("FieldMayBeFinal")
 public class FakeModelOptions extends LangchainModelOptions {
     private String modelName;
     private String apiKey;
@@ -21,6 +22,7 @@ public class FakeModelOptions extends LangchainModelOptions {
     @Builder
     public FakeModelOptions(String modelName, String apiKey, Double temperature, Double topP,
             List<String> stop, Integer maxTokens, Integer maxCompletionTokens) {
+        super(FakeModelBuilder.class);
         this.modelName = modelName;
         this.apiKey = apiKey;
         this.temperature = temperature;
@@ -28,11 +30,6 @@ public class FakeModelOptions extends LangchainModelOptions {
         this.stop = stop;
         this.maxTokens = maxTokens;
         this.maxCompletionTokens = maxCompletionTokens;
-    }
-
-    @Override
-    public Class<FakeModelBuilder> getModelBuilderClass() {
-        return FakeModelBuilder.class;
     }
 
     public String getModelName() {
