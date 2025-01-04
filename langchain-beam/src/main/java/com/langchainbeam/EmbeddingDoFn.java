@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.apache.beam.sdk.transforms.DoFn;
 
+import com.langchainbeam.model.BeamEmbedding;
 import com.langchainbeam.model.EmbeddingModelBuilder;
 import com.langchainbeam.model.EmbeddingOutput;
 
@@ -49,9 +50,10 @@ class EmbeddingDoFn extends DoFn<String, EmbeddingOutput> {
         } catch (Exception e) {
             throw e;
         }
-        EmbeddingOutput embeddingOutput = EmbeddingOutput.builder().embedding(response.content()).inputElement(input)
-                .build();
 
+        EmbeddingOutput embeddingOutput = EmbeddingOutput.builder()
+                .embedding(new BeamEmbedding(response.content().vector())).inputElement(input)
+                .build();
         context.output(embeddingOutput);
     }
 
