@@ -6,12 +6,27 @@ import org.apache.beam.sdk.transforms.DoFn;
 
 import com.langchainbeam.model.BeamEmbedding;
 import com.langchainbeam.model.EmbeddingModelBuilder;
+import com.langchainbeam.model.EmbeddingModelOptions;
 import com.langchainbeam.model.EmbeddingOutput;
 
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 
+/**
+ * A {@link DoFn} implementation for Apache Beam that processes input elements
+ * using a Embedding model. Embedding is generated based on model configuration
+ * provided by the {@link EmbeddingModelOptions}.
+ *
+ * <p>
+ * This class sets up a {@link EmbeddingModel} using a
+ * {@link EmbeddingModelBuilder}
+ * and uses the Embedding model to create the embedding for input string
+ * and outputs the model generated embedding vector
+ * </p>
+ *
+ * @param <T> the type of input string elements in the {@link PCollection}
+ */
 class EmbeddingDoFn extends DoFn<String, EmbeddingOutput> {
 
     private final EmbeddingModelHandler handler;
@@ -23,6 +38,11 @@ class EmbeddingDoFn extends DoFn<String, EmbeddingOutput> {
         this.handler = handler;
     }
 
+    /**
+     * set up embedding model
+     * 
+     * @throws Exception
+     */
     @Setup
     public void setupModel() throws Exception {
 
@@ -40,6 +60,11 @@ class EmbeddingDoFn extends DoFn<String, EmbeddingOutput> {
 
     }
 
+    /**
+     * Generates embedding for string using model
+     * 
+     * @param context
+     */
     @ProcessElement
     public void processElement(ProcessContext context) {
 

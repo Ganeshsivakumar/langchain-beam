@@ -9,6 +9,9 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import lombok.Builder;
 
+/**
+ * Fake Embedding model
+ */
 @SuppressWarnings("FieldMayBeFinal")
 public class FakeEmbeddingModel implements EmbeddingModel {
 

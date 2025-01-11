@@ -4,6 +4,9 @@ import com.langchainbeam.model.EmbeddingModelOptions;
 
 import lombok.Builder;
 
+/**
+ * Fake model options
+ */
 @SuppressWarnings("FieldMayBeFinal")
 public class FakeEmbeddingModelOptions extends EmbeddingModelOptions {
 

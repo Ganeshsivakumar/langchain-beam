@@ -5,6 +5,9 @@ import com.langchainbeam.model.EmbeddingModelOptions;
 
 import dev.langchain4j.model.embedding.EmbeddingModel;
 
+/**
+ * Fake model bulder
+ */
 public class FakeEmbeddingModelBuilder implements EmbeddingModelBuilder {
 
     @SuppressWarnings("unused")
