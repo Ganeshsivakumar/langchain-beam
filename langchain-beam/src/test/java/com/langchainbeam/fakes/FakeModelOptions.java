@@ -9,6 +9,7 @@ import lombok.Builder;
 /**
  * Fake model options for @link FakeChatModel}
  */
+@SuppressWarnings("FieldMayBeFinal")
 public class FakeModelOptions extends LangchainModelOptions {
     private String modelName;
     private String apiKey;

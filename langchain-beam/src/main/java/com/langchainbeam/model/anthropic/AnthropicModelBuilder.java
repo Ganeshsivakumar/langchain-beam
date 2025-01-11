@@ -38,7 +38,7 @@ public class AnthropicModelBuilder implements LangchainModelBuilder {
         if (modelOptions instanceof AnthropicModelOptions openAiModelOptions) {
             this.options = openAiModelOptions;
         } else {
-            throw new IllegalArgumentException("Invalid options type. Expected OpenAiModelOptions.");
+            throw new IllegalArgumentException("Invalid options type. Expected AnthropicModelOptions.");
         }
     }
 

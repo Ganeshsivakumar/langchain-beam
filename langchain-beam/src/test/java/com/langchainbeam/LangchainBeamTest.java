@@ -14,11 +14,11 @@ import org.apache.beam.sdk.transforms.Create;
 import org.apache.beam.sdk.transforms.MapElements;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.TypeDescriptor;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.langchainbeam.fakes.FakeChatModel;
 import com.langchainbeam.fakes.FakeModelBuilder;
@@ -42,9 +42,6 @@ public class LangchainBeamTest {
     {
         options.setRunner(DirectRunner.class);
     }
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void test_langchainbeam_ptransform() {
@@ -86,15 +83,16 @@ public class LangchainBeamTest {
 
     @Test
     public void test_langchainbeam_ptransform_withNullHandler() {
-        final Pipeline p = TestPipeline.create(options);
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Handler cannot be null");
 
+        final Pipeline p = TestPipeline.create(options);
         String inputElement = "input";
 
-        p.apply(Create.of(inputElement)).apply(LangchainBeam.run(null));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            p.apply(Create.of(inputElement)).apply(LangchainBeam.run(null));
+        });
 
-        p.run().waitUntilFinish();
+        assertEquals("Handler cannot be null", exception.getMessage());
+
     }
 
     @Test
@@ -118,10 +116,12 @@ public class LangchainBeamTest {
     public void test_FakeModelBuilder_With_IncompatibleOptions() {
         FakeModelBuilder builder = new FakeModelBuilder();
 
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Invalid options type. Expected FakeModelOptions.");
-
-        builder.setOptions(openAiModelOptions);
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    builder.setOptions(openAiModelOptions);
+                });
+        assertEquals("Invalid options type. Expected FakeModelOptions.", exception.getMessage());
     }
 
     @Test

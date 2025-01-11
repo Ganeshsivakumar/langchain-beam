@@ -14,6 +14,8 @@ public class OpenAiEmbeddingModelBuilder implements EmbeddingModelBuilder {
     public void setOptions(EmbeddingModelOptions modelOptions) {
         if (modelOptions instanceof OpenAiEmbeddingModelOptions openAiOptions) {
             this.options = openAiOptions;
+        } else {
+            throw new IllegalArgumentException("Invalid options type. Expected OpenAiEmbeddingModelOptions.");
         }
     }
 

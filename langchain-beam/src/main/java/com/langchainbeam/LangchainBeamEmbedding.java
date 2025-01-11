@@ -20,6 +20,9 @@ public class LangchainBeamEmbedding extends PTransform<PCollection<String>, PCol
     }
 
     public static LangchainBeamEmbedding embed(EmbeddingModelHandler modelHandler) {
+        if (modelHandler == null) {
+            throw new IllegalArgumentException("Handler cannot be null");
+        }
         return new LangchainBeamEmbedding(modelHandler);
     }
 
