@@ -5,7 +5,7 @@ This library lets you use language model capabilities directly in your Beam work
 
 ## Motivation
 
-Apache Beam is a programming model for creating batch and streaming-based data processing pipelines. It's an abstraction that provides a way to create data processing logic in a declarative way, little similar to creating UI components with Flutter or React Native.
+Apache Beam is a programming model for creating batch and streaming-based data processing pipelines. It's an abstraction that provides a way to create data processing as Transforms, each transform is like a stage in the pipeline. Langchain-beam library provides transforms to integrate LLMs into beam pipelines.
 
 The goal is to combine the apache beam's abstraction with the capabilities of Large Language Models, such as generation, completion, classification, and reasoning to process the data by leveraging LangChain, which provides a unified interface for connecting with various LLM providers, retrievals, and tools.
 
