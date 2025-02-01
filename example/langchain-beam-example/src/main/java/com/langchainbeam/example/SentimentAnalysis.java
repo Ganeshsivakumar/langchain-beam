@@ -52,7 +52,8 @@ public class SentimentAnalysis {
 
                     @ProcessElement
                     public void processElement(@Element LangchainBeamOutput out) {
-                        System.out.println("Model Output: " + out.getOutput());
+                        System.out.println(
+                                "Model Output: " + out.getOutput() + "Product review: " + out.getInputElement());
                     }
                 }));
 
