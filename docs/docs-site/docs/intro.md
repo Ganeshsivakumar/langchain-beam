@@ -41,7 +41,7 @@ with Maven project in `pom.xml`
 <dependency>
     <groupId>io.github.ganeshsivakumar</groupId>
     <artifactId>langchain-beam</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
