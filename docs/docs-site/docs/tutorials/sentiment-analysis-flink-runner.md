@@ -1,6 +1,6 @@
 # Run sentiment analysis pipeline using Apache Flink runner
 
-This notebook share how to perform sentiment analysis in beam pipeline using [LLM transform](../../guide/langchain-Beam-transforms#llm-transform) and run it using Apache Flink runner.
+This notebook shares how to perform sentiment analysis in beam pipeline using [LLM transform](../../guide/langchain-Beam-transforms#llm-transform) and run it using Apache Flink runner.
 
 Apache Flink is a powerful, distributed stream and batch data processing engine known for its scalability, fault tolerance, and stateful processing capabilities. In the context of Apache Beam, Flink serves as a robust runner that can efficiently execute complex pipelines, including those involving large language models (LLMs).
 
@@ -217,7 +217,7 @@ This will generate a JAR file inside the `target/` directory. Make sure to locat
 
 #### Submit the Job to the Flink Cluster
 
-To submit the pipeline job, use the following command:
+To submit the job, use the following command:
 
 ```sh
 ./bin/flink run -c com.example.Main /home/ganesh/Dev/beampipeline/flinkrun/lbflink/target/lbflink-1.0-SNAPSHOT.jar
