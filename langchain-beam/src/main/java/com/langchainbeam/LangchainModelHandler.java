@@ -1,53 +1,46 @@
 package com.langchainbeam;
 
-import java.io.Serializable;
-import java.util.Map;
-
+import com.langchainbeam.model.LangchainModelOptions;
 import org.apache.beam.sdk.values.PCollection;
 
-import com.langchainbeam.model.LangchainModelOptions;
-import com.langchainbeam.utils.JsonUtils;
+import java.util.Map;
 
 /**
  * A handler class for managing LangChain model options and instruction prompts.
  * This class is used to configure the model options (e.g., model name,
- * temperature)
- * and the
- * instruction prompt that is passed to the model for inference.
+ * temperature) and the instruction prompt that is passed to the model for inference.
  * <p>
  * The handler encapsulates the {@link LangchainModelOptions} and the
- * instruction prompt, which
- * are necessary to interact with LangChain's model provider interface. The
- * handler is designed
- * to be used in conjunction with {@link LangchainBeam} to run inference tasks
- * on a {@link PCollection} of data.
+ * instruction prompt, which are necessary to interact with LangChain's model provider interface.
+ * The handler is designed to be used in conjunction with {@link LangchainBeam} to run
+ * inference tasks on a {@link PCollection} of data.
  * </p>
+ *
+ * @see BaseModelHandler
+ * @see LangchainBeam
  */
-public class LangchainModelHandler implements Serializable {
+public class LangchainModelHandler extends BaseModelHandler {
 
-    private final LangchainModelOptions options;
     private final String instructionPrompt;
-    private String outputFormat;
 
     /**
      * Constructs a new {@link LangchainModelHandler} with the specified model
      * options and instruction prompt.
-     * 
+     *
      * @param options           the {@link LangchainModelOptions} containing model
      *                          configurations such as model name and API key
      * @param instructionPrompt the instruction prompt that will guide the model's
      *                          behavior (e.g., for classification tasks)
      */
     public LangchainModelHandler(LangchainModelOptions options, String instructionPrompt) {
-        this.options = options;
+        super(options);
         this.instructionPrompt = instructionPrompt;
-
     }
 
     /**
      * Constructs a new {@link LangchainModelHandler} with the specified model
      * options, instruction prompt, and output format.
-     * 
+     *
      * @param options           the {@link LangchainModelOptions} containing model
      *                          configurations
      * @param instructionPrompt the instruction prompt to guide the model on
@@ -59,39 +52,18 @@ public class LangchainModelHandler implements Serializable {
      *                          map of keys and values as description
      */
     public LangchainModelHandler(LangchainModelOptions options, String instructionPrompt,
-            Map<String, String> outputFormat) {
-        this.options = options;
+                                 Map<String, String> outputFormat) {
+        super(options, outputFormat);
         this.instructionPrompt = instructionPrompt;
-        setOutputFormat(outputFormat);
-
-    }
-
-    /**
-     * Returns the {@link LangchainModelOptions} for this handler, which includes
-     * model configurations such as the model name and API key.
-     * 
-     * @return the model options used for inference
-     */
-    public LangchainModelOptions getOptions() {
-        return options;
     }
 
     /**
      * Returns the instruction prompt that guides the model in performing tasks such
      * as classification or generating outputs.
-     * 
+     *
      * @return the instruction prompt string
      */
     public String getPrompt() {
         return instructionPrompt;
-    }
-
-    private void setOutputFormat(Map<String, String> outputFormat) {
-        this.outputFormat = JsonUtils.mapToJson(outputFormat);
-
-    }
-
-    String getOutputFormat() {
-        return outputFormat;
     }
 }
