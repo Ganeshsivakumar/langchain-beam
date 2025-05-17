@@ -1,17 +1,10 @@
 package com.langchainbeam;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
-
-import org.apache.beam.sdk.transforms.DoFn;
-import org.apache.beam.sdk.values.PCollection;
-
 import com.langchainbeam.model.LangchainBeamOutput;
 import com.langchainbeam.model.LangchainModelBuilder;
-import com.langchainbeam.model.LangchainModelOptions;
 import com.langchainbeam.model.ModelPrompt;
-
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import org.apache.beam.sdk.transforms.DoFn;
 
 /**
  * A {@link DoFn} implementation for Apache Beam that processes input elements
@@ -24,55 +17,16 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
  * and uses it to generate outputs based on the input element's content
  * combined with a prompt. The generated output is emitted as a string.
  * </p>
- *
- * @param <T> the type of input elements in the {@link PCollection}
  */
-class LangchainBeamDoFn<T> extends DoFn<String, LangchainBeamOutput> {
-
-    private final LangchainModelHandler handler;
-    // private final SerializableFunction<String, T> modelOutputCallback;
-    private ChatLanguageModel model;
-    private LangchainModelBuilder modelBuilder;
-    private String modelOutput;
-    private String modelOutputFormat;
+class LangchainBeamDoFn extends BaseLangchainDoFn<LangchainModelHandler, String> {
 
     /**
-     * Constructs a new {@link LangchainBeamDoFn} with the specified
-     * {@link LangchainModelHandler}.
+     * Constructs a new LangchainBeamDoFn with the specified model handler.
      *
-     * @param handler the {@link LangchainModelHandler} used to configure
-     *                and build the LangChain model
+     * @param handler The model handler that provides configuration and behavior for this DoFn
      */
-    public LangchainBeamDoFn(LangchainModelHandler handler) {
-        this.handler = handler;
-    }
-
-    /**
-     * Initializes the LangChain model before processing elements.
-     * <p>
-     * This method retrieves model options from the handler, instantiates a
-     * {@link LangchainModelBuilder} based on those options, and configures
-     * it to build the model.
-     * </p>
-     *
-     * @throws Exception if an error occurs during model setup, such as
-     *                   instantiation or configuration errors
-     */
-    @Setup
-    public void setup() throws Exception {
-        LangchainModelOptions options = handler.getOptions();
-        Class<? extends LangchainModelBuilder> modelBuilderClass = options.getModelBuilderClass();
-
-        try {
-            modelBuilder = modelBuilderClass.getDeclaredConstructor().newInstance();
-        } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException
-                | SecurityException | InvocationTargetException e) {
-            throw new Exception("Failed to set up Langchain model due to instantiation error: ", e);
-        }
-        modelOutputFormat = Objects.requireNonNullElse(handler.getOutputFormat(), "Plain text");
-        modelBuilder.setOptions(options);
-        model = modelBuilder.build();
-
+    protected LangchainBeamDoFn(LangchainModelHandler handler) {
+        super(handler);
     }
 
     /**
@@ -80,31 +34,21 @@ class LangchainBeamDoFn<T> extends DoFn<String, LangchainBeamOutput> {
      * element's content and the instruction prompt.
      * <p>
      * This method uses {@link ModelPrompt#PROMPT} to format a final prompt,
-     * incorporating
-     * both the input element's string representation and the handler's instruction
-     * prompt.
-     * The formatted prompt is then passed to the model to generate an output, which
-     * is
-     * emitted as a string.
+     * incorporating both the input element's string representation and the handler's instruction
+     * prompt. The formatted prompt is then passed to the model to generate an output, which is
+     * emitted as a {@link LangchainBeamOutput} object containing both the input and output.
      * </p>
      *
+     * @param context The processing context that provides access to the input element
+     *                and allows outputting the result
      */
     @ProcessElement
     public void processElement(ProcessContext context) {
         String input = context.element();
-
-        final String finalPrompt = String.format(ModelPrompt.PROMPT, input, handler.getPrompt(),
-                modelOutputFormat);
-
-        try {
-            modelOutput = model.generate(finalPrompt);
-
-        } catch (Exception e) {
-            throw e;
-        }
+        final String finalPrompt = this.getFinalPrompt(input, handler.getPrompt());
+        String modelOutput = this.doGenerate(finalPrompt);
         LangchainBeamOutput lbModelOutput = LangchainBeamOutput.builder().inputElement(input)
                 .output(modelOutput).build();
         context.output(lbModelOutput);
     }
-
 }
