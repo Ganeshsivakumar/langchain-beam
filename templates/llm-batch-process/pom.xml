@@ -127,6 +127,18 @@
             </dependencies>
         </profile>
 
+        <!-- Direct runner -->
+        <profile>
+            <id>runner-direct</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.beam</groupId>
+                    <artifactId>beam-runners-direct-java</artifactId>
+                    <version>${beam.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
         <!-- Flink 1.15 -->
         <profile>
             <id>flink-1.15</id>
