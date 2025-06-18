@@ -16,6 +16,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <beam.version>2.65.0</beam.version>
     </properties>
 
     <dependencies>
@@ -28,12 +29,12 @@
         <dependency>
             <groupId>org.apache.beam</groupId>
             <artifactId>beam-sdks-java-core</artifactId>
-            <version>2.65.0</version>
+            <version>${beam.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.beam</groupId>
-            <artifactId>beam-runners-direct-java</artifactId>
-            <version>2.65.0</version>
+            <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
+            <version>${beam.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -49,16 +50,6 @@
             <groupId>io.github.ganeshsivakumar</groupId>
             <artifactId>langchain-beam</artifactId>
             <version>0.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.beam</groupId>
-            <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
-            <version>2.65.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.beam</groupId>
-            <artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
-            <version>2.65.0</version>
         </dependency>
     </dependencies>
     <build>
@@ -117,5 +108,84 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <!-- Default: Dataflow runner -->
+        <profile>
+            <id>runner-dataflow</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <beam.version>2.65.0</beam.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.beam</groupId>
+                    <artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
+                    <version>${beam.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- Flink 1.15 -->
+        <profile>
+            <id>flink-1.15</id>
+            <properties>
+                <beam.version>2.55.0</beam.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.beam</groupId>
+                    <artifactId>beam-runners-flink-1.15</artifactId>
+                    <version>${beam.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- Flink 1.17 -->
+        <profile>
+            <id>flink-1.17</id>
+            <properties>
+                <beam.version>2.60.0</beam.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.beam</groupId>
+                    <artifactId>beam-runners-flink-1.17</artifactId>
+                    <version>${beam.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- Flink 1.18 -->
+        <profile>
+            <id>flink-1.18</id>
+            <properties>
+                <beam.version>2.63.0</beam.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.beam</groupId>
+                    <artifactId>beam-runners-flink-1.18</artifactId>
+                    <version>${beam.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- Flink 1.19 -->
+        <profile>
+            <id>flink-1.19</id>
+            <properties>
+                <beam.version>2.65.0</beam.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.beam</groupId>
+                    <artifactId>beam-runners-flink-1.19</artifactId>
+                    <version>${beam.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
