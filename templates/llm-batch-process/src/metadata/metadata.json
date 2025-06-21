@@ -1,0 +1,61 @@
+{
+    "name": "LLM Batch processing",
+    "description": "Simple template to batch process data using LLM",
+    "parameters": [
+        {
+            "name": "apiKey",
+            "label": "Api Key",
+            "helpText": "Open AI API key",
+            "parentTriggerValues": [
+                ""
+            ],
+            "paramType": "TEXT"
+        },
+        {
+            "name": "prompt",
+            "label": "Instruction Prompt",
+            "helpText": "instruction prompt to model on how to process input data",
+            "parentTriggerValues": [
+                ""
+            ],
+            "paramType": "TEXT"
+        },
+        {
+            "name": "modelName",
+            "label": "Model Name",
+            "helpText": "OpenAI model name",
+            "parentTriggerValues": [
+                ""
+            ],
+            "paramType": "TEXT"
+        },
+        {
+            "name": "inputDataFile",
+            "label": "input data file",
+            "helpText": "Input data to be processed by LLM",
+            "regexes": [
+                "^gs:\\/\\/[^\\n\\r]+$"
+            ],
+            "parentTriggerValues": [
+                ""
+            ],
+            "paramType": "GCS_READ_FILE"
+        },
+        {
+            "name": "llmOutputFile",
+            "label": "Output file",
+            "helpText": "Output file to store the LLM processed data",
+            "regexes": [
+                "^gs:\\/\\/[^\\n\\r]+$"
+            ],
+            "parentTriggerValues": [
+                ""
+            ],
+            "paramType": "GCS_WRITE_FILE"
+        }
+    ],
+    "streaming": false,
+    "supportsAtLeastOnce": false,
+    "supportsExactlyOnce": true,
+    "defaultStreamingMode": "UNSPECIFIED"
+}

@@ -1,0 +1,8 @@
+{
+    "label": "Templates",
+    "position": 4,
+    "link": {
+        "type": "generated-index",
+        "description": "Templates are pre-built, reusable, and open source Apache Beam pipelines that are ready to deploy. They perform specific data tasks like classification, summarization, or retrieval-augmented generation (RAG). Each template abstracts the complexity of building and managing pipelines, and can be executed directly on runners such as Google Cloud Dataflow, Apache Flink, or Spark with minimal configuration."
+    }
+}
