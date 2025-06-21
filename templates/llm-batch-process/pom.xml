@@ -17,6 +17,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <beam.version>2.65.0</beam.version>
+        <runner.name>dataflow</runner.name>
     </properties>
 
     <dependencies>
@@ -53,6 +54,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>llm-batch-process-${runner.name}</finalName>
         <plugins>
             <!--  clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle  -->
             <plugin>
@@ -144,6 +146,7 @@
             <id>flink-1.15</id>
             <properties>
                 <beam.version>2.55.0</beam.version>
+                <runner.name>flink-1.15</runner.name>
             </properties>
             <dependencies>
                 <dependency>
@@ -154,11 +157,28 @@
             </dependencies>
         </profile>
 
+        <!-- Flink 1.16 -->
+        <profile>
+            <id>flink-1.16</id>
+            <properties>
+                <beam.version>2.60.0</beam.version>
+                <runner.name>flink-1.16</runner.name>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.beam</groupId>
+                    <artifactId>beam-runners-flink-1.16</artifactId>
+                    <version>${beam.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
         <!-- Flink 1.17 -->
         <profile>
             <id>flink-1.17</id>
             <properties>
                 <beam.version>2.60.0</beam.version>
+                <runner.name>flink-1.17</runner.name>
             </properties>
             <dependencies>
                 <dependency>
@@ -174,6 +194,7 @@
             <id>flink-1.18</id>
             <properties>
                 <beam.version>2.63.0</beam.version>
+                <runner.name>flink-1.18</runner.name>
             </properties>
             <dependencies>
                 <dependency>
@@ -189,6 +210,7 @@
             <id>flink-1.19</id>
             <properties>
                 <beam.version>2.65.0</beam.version>
+                <runner.name>flink-1.19</runner.name>
             </properties>
             <dependencies>
                 <dependency>

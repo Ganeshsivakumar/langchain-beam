@@ -42,8 +42,6 @@ public class LlmBatchTextProcessor {
                       String formatted = String.format(
                           "Model Output: %s, Input Element: %s",
                           out.getOutput(), out.getInputElement());
-                      org.slf4j.LoggerFactory.getLogger(LlmBatchTextProcessor.class)
-                          .info("Output: {}", formatted);
                       return formatted;
                     }))
         .apply(
