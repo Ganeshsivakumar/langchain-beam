@@ -132,6 +132,10 @@
         <!-- Direct runner -->
         <profile>
             <id>runner-direct</id>
+            <properties>
+                <beam.version>2.65.0</beam.version>
+                <runner.name>direct</runner.name>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.apache.beam</groupId>
