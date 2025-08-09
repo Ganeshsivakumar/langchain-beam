@@ -28,7 +28,7 @@ echo "🚀 Submitting job using Flink CLI..."
 
 /opt/flink/bin/flink run \
   --jobmanager "$FLINK_MASTER" \
-  -c com.templates.langchainbeam.LlmBatchTextProcessor \
+  -c com.templates.langchainbeam.KafkaToPinecone \
   "$JAR_PATH" "$@"
 
 echo "✅ Job successfully submitted to Flink
