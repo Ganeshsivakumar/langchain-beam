@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>llm-batch-process</module>
+        <module>kafka-to-pinecone</module>
     </modules>
 
     <properties>
