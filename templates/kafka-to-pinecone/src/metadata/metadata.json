@@ -1,0 +1,58 @@
+{
+    "name": "Kafka to Pinecone",
+    "description": "Template to stream data from Kafka and index embeddings into Pinecone using OpenAI.",
+    "parameters": [
+        {
+            "name": "brokers",
+            "label": "Kafka Brokers",
+            "helpText": "Comma-separated list of Kafka brokers (e.g., host1:9092,host2:9092)",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "topic",
+            "label": "Kafka Topic",
+            "helpText": "Kafka topic to consume from",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "embeddingModel",
+            "label": "Embedding Model",
+            "helpText": "Name of the embedding model to use (e.g., text-embedding-ada-002)",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "openaiApiKey",
+            "label": "OpenAI API Key",
+            "helpText": "API key for OpenAI",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "pineconeApiKey",
+            "label": "Pinecone API Key",
+            "helpText": "API key for Pinecone",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "pineconeIndex",
+            "label": "Pinecone Index",
+            "helpText": "Pinecone index name",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "pineconeNamespace",
+            "label": "Pinecone Namespace",
+            "helpText": "Pinecone namespace",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "pineconeApiUrl",
+            "label": "Pinecone API URL",
+            "helpText": "Pinecone API URL (e.g., https://controller.us-east1-gcp.pinecone.io)",
+            "paramType": "TEXT"
+        }
+    ],
+    "streaming": true,
+    "supportsAtLeastOnce": false,
+    "supportsExactlyOnce": true,
+    "defaultStreamingMode": "STREAMING"
+}
