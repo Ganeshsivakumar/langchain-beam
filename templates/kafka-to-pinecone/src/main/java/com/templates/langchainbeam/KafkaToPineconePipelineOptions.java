@@ -43,5 +43,3 @@ public interface KafkaToPineconePipelineOptions extends PipelineOptions {
 
     void setPineconeApiUrl(String url);
 }
-
-// 3.8.0
