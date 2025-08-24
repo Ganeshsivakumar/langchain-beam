@@ -22,7 +22,7 @@ This template:
 
 | Parameter             | Description                                                                                      | Type      |
 |-----------------------|--------------------------------------------------------------------------------------------------|-----------|
-| `brokers`             | Kafka bootstrap servers, comma-separated (e.g., `broker_2:9092,broker_2:9092`)                   | Required  |
+| `brokers`             | Kafka bootstrap servers, comma-separated (e.g., `broker_1:9092,broker_2:9092`)                   | Required  |
 | `topic`               | Kafka topic to consume messages from (e.g., `text-content`, `documents`)                         | Required  |
 | `kafkaUsername`       | Kafka username/API key                                                                           | Optional  |
 | `kafkaPassword`       | Kafka password/API secret                                                                        | Optional  |
@@ -38,9 +38,9 @@ This template:
 
 ## Pipeline Architecture 🏗️
 
-This pipeline continuously consumes messages from a Kafka topic using Apache Beam’s KafkaIO connector. It’s set up to read new messages arriving after the pipeline starts. The pipeline currently expects both message keys and values as plain strings, deserialized using Kafka’s `StringDeserializer`. Incoming messages are grouped into fixed 10-second windows to batch processing and limit the frequency of calls to external services like OpenAI and Pinecone, helping to prevent overload. Each message’s content is sent to an OpenAI embedding model via LangchainBeam, which generates vector embeddings. These embeddings are then upserted into a pinecone vector database with the specified index and namespace.
+This pipeline continuously consumes messages from a Kafka topic using Apache Beam’s KafkaIO connector. It’s set up to read new messages arriving after the pipeline starts. The pipeline currently expects both message keys and values as plain strings, deserialized using Kafka’s `StringDeserializer`. Incoming messages are grouped into fixed 10-second windows for batch processing and limit the frequency of calls to external services like OpenAI and Pinecone, helping to prevent overload. Each message’s content is sent to an OpenAI embedding model via LangchainBeam, which generates vector embeddings. These embeddings are then upserted into a pinecone vector database with the specified index and namespace.
 
-some kafka clusters might be setup up with different serialization formats such as Avro, which typically requires integration with a schema registry to manage schemas, others may use different Kafka authentication mechanism. While these are not yet supported in this template, we plan to add them soon. We welcome your feature requests and contributions please open an issue on GitHub repository to share your ideas.
+some kafka clusters might be setup up with different serialization formats such as Avro, which typically requires integration with a schema registry to manage schemas, others may use different Kafka authentication mechanism. While these are not yet supported in this template, we plan to add them soon. We welcome your feature requests and contributions; please open an issue on GitHub repository to share your ideas.
 
 #### Kafka Cluster Authentication 
 If your kafka cluster is managed service like confluent cloud, Amazon MSK then kafka connector in pipeline needs to authenticate with the brokers to read data from topics. The pipeline supports standard Kafka authentication parameters (`kafkaUsername`, `kafkaPassword`, `kafkaSecurityProtocol`, and `kafkaSaslMechanism`) for secure connection. If authentication parameters are not provided, the template defaults to connecting without authentication.
@@ -73,7 +73,7 @@ gcloud dataflow flex-template run "kafka-to-pinecone-stream" \
   --subnetwork="https://www.googleapis.com/compute/v1/projects/project-id/regions/us-east1/subnetworks/default" \
   --staging-location="gs://your-stage-bucket/stage/" \
   --temp-location="gs://your-stage-bucket/temp/" \
-  --parameters="brokers=your-kafka-cluster:9092,topic=text-content,kafkaUsername=api_key,kafkaPassword=password,kafkaSecurityProtocol=SASL_PLAINTEXT,kafkaSaslMechanism=PLAIN,embeddingModel=text-embedding-ada-002,openaiApiKey=your_openai_key,pineconeApiKey=your_pinecone_key,pineconeIndex=search-index,pineconeNamespace=production,pineconeApiUrl=https://your-index.svc.us-east1-gcp.pinecone.io"
+  --parameters="brokers=your-kafka-cluster:9092,topic=text-content,kafkaUsername=api_key,kafkaPassword=password,kafkaSecurityProtocol=SASL_PLAINTEXT,kafkaSaslMechanism=PLAIN,embeddingModel=text-embedding-3-small,openaiApiKey=your_openai_key,pineconeApiKey=your_pinecone_key,pineconeIndex=search-index,pineconeNamespace=production,pineconeApiUrl=https://your-index.svc.us-east1-gcp.pinecone.io"
 ```
 
 If you'd like to host the template in your own GCP project:
@@ -121,7 +121,7 @@ docker run --rm \
   --kafkaPassword=secret \
   --kafkaSecurityProtocol=SASL_PLAINTEXT \
   --kafkaSaslMechanism=PLAIN \
-  --embeddingModel=text-embedding-ada-002 \
+  --embeddingModel=text-embedding-3-small \
   --openaiApiKey=your_openai_key \
   --pineconeApiKey=your_pinecone_key \
   --pineconeIndex=search-index \
@@ -135,7 +135,7 @@ The pipeline is built and packaged as a JAR. Since Apache Beam’s Flink Runner 
 Refer to the Flink version [compatibility matrix](https://beam.apache.org/documentation/runners/flink/#flink-version-compatibility) to choose the correct version. 
 
 
-- The container downloads the appropriate .jar file from GCS based on ***FLINK_VERSION*** (your flink cluster version) with correct beam and runner depedencies
+- The container downloads the appropriate .jar file from GCS based on ***FLINK_VERSION*** (your flink cluster version) with correct beam and runner dependencies
 
 - It uses the Flink CLI (flink run) to submit the job to the Flink cluster (as specified by `FLINK_MASTER`)
 
