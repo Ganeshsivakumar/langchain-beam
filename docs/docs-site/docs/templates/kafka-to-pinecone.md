@@ -20,22 +20,31 @@ This template:
 
 ## Template Parameters ⚙️
 
-| Parameter          | Description                                                                                      |
-|--------------------|--------------------------------------------------------------------------------------------------|
-| `brokers`          | Kafka bootstrap servers, comma-separated (e.g., `broker_2:9092,broker_2:9092`)                   |
-| `topic`            | Kafka topic to consume messages from (e.g., `text-content`, `documents`)                         |
-| `embeddingModel`   | OpenAI embedding model name (e.g., `text-embedding-3-small`)           |
-| `openaiApiKey`     | Your OpenAI API key for embedding generation (e.g., `sk-proj-BX_6MwMEV5_...`)                    |
-| `pineconeApiKey`   | Your Pinecone API key for vector database access                                                 |
-| `pineconeIndex`    | Name of the Pinecone index to write vectors to (e.g., `my-search-index`)                         |
-| `pineconeNamespace`| Pinecone namespace for organizing vectors (e.g., `production`, `staging`)                        |
-| `pineconeApiUrl`   | Pinecone API endpoint URL for your environment                                                   |
+| Parameter             | Description                                                                                      | Type      |
+|-----------------------|--------------------------------------------------------------------------------------------------|-----------|
+| `brokers`             | Kafka bootstrap servers, comma-separated (e.g., `broker_2:9092,broker_2:9092`)                   | Required  |
+| `topic`               | Kafka topic to consume messages from (e.g., `text-content`, `documents`)                         | Required  |
+| `kafkaUsername`       | Kafka username/API key                                                                           | Optional  |
+| `kafkaPassword`       | Kafka password/API secret                                                                        | Optional  |
+| `kafkaSecurityProtocol` | Security protocol: `PLAINTEXT`, `SSL`, `SASL_PLAINTEXT`, `SASL_SSL`                            | Optional  |
+| `kafkaSaslMechanism`  | SASL mechanism: `PLAIN`, `SCRAM-SHA-256`, `SCRAM-SHA-512`,                                       | Optional  |
+| `embeddingModel`      | OpenAI embedding model name (e.g., `text-embedding-3-small`)                                     | Required  |
+| `openaiApiKey`        | Your OpenAI API key for embedding generation (e.g., `sk-proj-BX_6MwMEV5_...`)                    | Required  |
+| `pineconeApiKey`      | Your Pinecone API key for vector database access                                                 | Required  |
+| `pineconeIndex`       | Name of the Pinecone index to write vectors to (e.g., `my-search-index`)                         | Required  |
+| `pineconeNamespace`   | Pinecone namespace for organizing vectors (e.g., `production`, `staging`)                        | Optional  |
+| `pineconeApiUrl`      | Pinecone API endpoint URL for your environment                                                   | Required  |
+
 
 ## Pipeline Architecture 🏗️
 
-This pipeline continuously consumes messages from a Kafka topic using Apache Beam’s KafkaIO connector. It’s set up to read only new messages arriving after the pipeline starts, as Kafka consumer setting that resets offsets to the latest available data (`AUTO_OFFSET_RESET_CONFIG : "latest"`). The pipeline currently expects both message keys and values as plain strings, deserialized using Kafka’s `StringDeserializer`. Incoming messages are grouped into fixed 10-second windows to batch processing and limit the frequency of calls to external services like OpenAI and Pinecone, helping to prevent overload. Each message’s content is sent to an OpenAI embedding model via LangchainBeam, which generates vector embeddings. These embeddings are then upserted into a Pinecone vector database with the specified index and namespace.
+This pipeline continuously consumes messages from a Kafka topic using Apache Beam’s KafkaIO connector. It’s set up to read new messages arriving after the pipeline starts. The pipeline currently expects both message keys and values as plain strings, deserialized using Kafka’s `StringDeserializer`. Incoming messages are grouped into fixed 10-second windows to batch processing and limit the frequency of calls to external services like OpenAI and Pinecone, helping to prevent overload. Each message’s content is sent to an OpenAI embedding model via LangchainBeam, which generates vector embeddings. These embeddings are then upserted into a pinecone vector database with the specified index and namespace.
 
-some kafka clusters might be setup up with different serialization formats such as Avro, or advanced Kafka authentication mechanisms. While these are not yet supported in this template, we plan to add them soon. We welcome your feature requests and contributions please open an issue on GitHub repository to share your ideas.
+some kafka clusters might be setup up with different serialization formats such as Avro, which typically requires integration with a schema registry to manage schemas, others may use different Kafka authentication mechanism. While these are not yet supported in this template, we plan to add them soon. We welcome your feature requests and contributions please open an issue on GitHub repository to share your ideas.
+
+#### Kafka Cluster Authentication 
+If your kafka cluster is managed service like confluent cloud, Amazon MSK then kafka connector in pipeline needs to authenticate with the brokers to read data from topics. The pipeline supports standard Kafka authentication parameters (`kafkaUsername`, `kafkaPassword`, `kafkaSecurityProtocol`, and `kafkaSaslMechanism`) for secure connection. If authentication parameters are not provided, the template defaults to connecting without authentication.
+
 
 #### OpenAI API Calls and Batching
 Currently, even though the pipeline groups messages into fixed 10-second windows to control processing frequency, it still sends embedding requests individually for each message within those windows. This means the number of OpenAI API calls scales with message volume, which may impact cost and rate limits.
@@ -64,7 +73,7 @@ gcloud dataflow flex-template run "kafka-to-pinecone-stream" \
   --subnetwork="https://www.googleapis.com/compute/v1/projects/project-id/regions/us-east1/subnetworks/default" \
   --staging-location="gs://your-stage-bucket/stage/" \
   --temp-location="gs://your-stage-bucket/temp/" \
-  --parameters="brokers=your-kafka-cluster:9092,topic=text-content,embeddingModel=text-embedding-ada-002,openaiApiKey=your_openai_key,pineconeApiKey=your_pinecone_key,pineconeIndex=search-index,pineconeNamespace=production,pineconeApiUrl=https://your-index.svc.us-east1-gcp.pinecone.io"
+  --parameters="brokers=your-kafka-cluster:9092,topic=text-content,kafkaUsername=api_key,kafkaPassword=password,kafkaSecurityProtocol=SASL_PLAINTEXT,kafkaSaslMechanism=PLAIN,embeddingModel=text-embedding-ada-002,openaiApiKey=your_openai_key,pineconeApiKey=your_pinecone_key,pineconeIndex=search-index,pineconeNamespace=production,pineconeApiUrl=https://your-index.svc.us-east1-gcp.pinecone.io"
 ```
 
 If you'd like to host the template in your own GCP project:
@@ -108,6 +117,10 @@ docker run --rm \
   --runner=FlinkRunner \
   --brokers=your-kafka-cluster:9092 \
   --topic=text-content \
+  --kafkaUsername=key \
+  --kafkaPassword=secret \
+  --kafkaSecurityProtocol=SASL_PLAINTEXT \
+  --kafkaSaslMechanism=PLAIN \
   --embeddingModel=text-embedding-ada-002 \
   --openaiApiKey=your_openai_key \
   --pineconeApiKey=your_pinecone_key \
@@ -130,7 +143,12 @@ Refer to the Flink version [compatibility matrix](https://beam.apache.org/docume
 
 ### 3. LangBeam (Managed Cloud) 
 
-TO-DO:
+
+**LangBeam** is a fully managed platform for running Apache Beam pipelines, such as this Kafka-to-Pinecone template. Instead of dealing with infrastructure setup, runner configuration, provisioning resources, and scaling. You simply provide the required template parameters and start the pipeline.
+
+From that moment, your **AI agents and RAG applications** begin receiving real-time data — continuously, reliably, and at scale.
+
+#### **Sign up for [early access](https://app.youform.com/forms/9hbdmkly).**
 
 
 ### 4. Locally
@@ -161,6 +179,10 @@ java -cp target/kafka-to-pinecone-direct.jar \
   --runner=DirectRunner \
   --brokers=localhost:9092 \
   --topic=my-topic \
+  --kafkaUsername=key \
+  --kafkaPassword=secret \
+  --kafkaSecurityProtocol=SASL_PLAINTEXT \
+  --kafkaSaslMechanism=PLAIN \
   --embeddingModel=text-embedding-3-small \
   --openaiApiKey=your_openai_key \
   --pineconeApiKey=your_pinecone_api_key \
