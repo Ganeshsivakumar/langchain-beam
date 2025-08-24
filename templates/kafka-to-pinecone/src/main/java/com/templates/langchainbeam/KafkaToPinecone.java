@@ -1,18 +1,13 @@
 package com.templates.langchainbeam;
 
-import java.util.Map;
-
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
-import org.apache.beam.sdk.values.TypeDescriptors;
-import org.apache.beam.sdk.transforms.MapElements;
+import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.io.kafka.KafkaIO;
-import org.apache.beam.sdk.io.kafka.KafkaRecord;
-
-import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.beam.sdk.transforms.Values;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.joda.time.Duration;
 
@@ -37,21 +32,17 @@ public class KafkaToPinecone {
 
         EmbeddingModelHandler handler = new EmbeddingModelHandler(modelOptions);
 
-        p.apply(KafkaIO.<String, String>read()
+        p.apply("Read from Kafka", KafkaIO.<String, String>read()
                 .withBootstrapServers(options.getBrokers())
                 .withTopic(options.getTopic())
                 .withKeyDeserializer(StringDeserializer.class)
                 .withValueDeserializer(StringDeserializer.class)
-                .withConsumerConfigUpdates(Map.of(
-                        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest",
-                        ConsumerConfig.GROUP_ID_CONFIG,
-                        "langchain-beam-consumer-" + System.currentTimeMillis())))
-                .apply(Window.<KafkaRecord<String, String>>into(
+                .withConsumerConfigUpdates(Config.buildKafkaConfig(options)).withoutMetadata())
+                .apply("Fixed Window", Window.<KV<String, String>>into(
                         FixedWindows.of(Duration.standardSeconds(10))))
-                .apply(MapElements.into(TypeDescriptors.strings())
-                        .via((KafkaRecord<String, String> record) -> record.getKV().getValue()))
-                .apply(LangchainBeamEmbedding.embed(handler))
-                .apply(ParDo.of(new PineconeWriter(
+                .apply("Extract Values", Values.<String>create())
+                .apply("Embed text", LangchainBeamEmbedding.embed(handler))
+                .apply("Write to Pinecone", ParDo.of(new PineconeWriter(
                         options.getPineconeApiKey(),
                         options.getPineconeApiUrl(),
                         options.getPineconeIndex(),
