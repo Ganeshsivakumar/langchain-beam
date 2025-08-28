@@ -3,6 +3,8 @@ package com.templates.langchainbeam;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.ParDo;
+import org.apache.beam.sdk.transforms.windowing.AfterProcessingTime;
+import org.apache.beam.sdk.transforms.windowing.AfterWatermark;
 import org.apache.beam.sdk.transforms.windowing.FixedWindows;
 import org.apache.beam.sdk.transforms.windowing.Window;
 import org.apache.beam.sdk.values.KV;
@@ -38,8 +40,22 @@ public class KafkaToPinecone {
                 .withKeyDeserializer(StringDeserializer.class)
                 .withValueDeserializer(StringDeserializer.class)
                 .withConsumerConfigUpdates(Config.buildKafkaConfig(options)).withoutMetadata())
-                .apply("Fixed Window", Window.<KV<String, String>>into(
-                        FixedWindows.of(Duration.standardSeconds(10))))
+                .apply("Fixed Window", Window
+                        .<KV<String, String>>into(FixedWindows.of(Duration.standardSeconds(10)))
+                        .triggering(
+                                AfterWatermark.pastEndOfWindow()
+                                        .withLateFirings(AfterProcessingTime
+                                                .pastFirstElementInPane()
+                                                .plusDelayOf(Duration
+                                                        .standardSeconds(
+                                                                10)))
+                                        .withEarlyFirings(AfterProcessingTime
+                                                .pastFirstElementInPane()
+                                                .plusDelayOf(Duration
+                                                        .standardSeconds(
+                                                                10))))
+                        .withAllowedLateness(Duration.standardMinutes(5))
+                        .accumulatingFiredPanes())
                 .apply("Extract Values", Values.<String>create())
                 .apply("Embed text", LangchainBeamEmbedding.embed(handler))
                 .apply("Write to Pinecone", ParDo.of(new PineconeWriter(
