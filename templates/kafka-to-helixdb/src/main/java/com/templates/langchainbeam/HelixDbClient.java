@@ -38,7 +38,7 @@ public class HelixDbClient {
 
         System.err.println("url: " + url);
 
-        System.out.println("req body: " + body);
+        System.out.println("req content: " + content);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -52,7 +52,6 @@ public class HelixDbClient {
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
             System.out.println("Status code: " + response.statusCode());
-            System.out.println("Inserted vectors for content: " + content);
 
         } catch (IOException | InterruptedException e) {
             throw e;
