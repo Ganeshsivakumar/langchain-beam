@@ -11,6 +11,7 @@
     <modules>
         <module>llm-batch-process</module>
         <module>kafka-to-pinecone</module>
+        <module>kafka-to-helixdb</module>
     </modules>
 
     <properties>

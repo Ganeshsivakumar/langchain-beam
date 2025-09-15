@@ -1,0 +1,74 @@
+{
+    "name": "Kafka to HelixDb",
+    "description": "Template to stream data from Kafka and index embeddings into HelixDB using OpenAI.",
+    "parameters": [
+        {
+            "name": "brokers",
+            "label": "Kafka Brokers",
+            "helpText": "Comma-separated list of Kafka brokers (e.g., host1:9092,host2:9092)",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "topic",
+            "label": "Kafka Topic",
+            "helpText": "Kafka topic to consume from",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "kafkaUsername",
+            "label": "kafka username",
+            "helpText": "kafka cluster username/API key for authentication",
+            "paramType": "TEXT",
+            "optional": true
+        },
+        {
+            "name": "kafkaPassword",
+            "label": "kafka password",
+            "helpText": "kafka cluster password/Secret for authentication",
+            "paramType": "TEXT",
+            "optional": true
+        },
+        {
+            "name": "kafkaSecurityProtocol",
+            "label": "kafka security protocol",
+            "helpText": "kafka security protocol for authentication. Eg: PLAINTEXT, SSL, SASL_PLAINTEXT, and SASL_SSL",
+            "paramType": "TEXT",
+            "optional": true
+        },
+        {
+            "name": "kafkaSaslMechanism",
+            "label": "kafka sasl Mechanism",
+            "helpText": "kafka sasl Mechanism for authentication. Eg:PLAIN, SCRAM-SHA-256, SCRAM-SHA-512, GSSAPI",
+            "paramType": "TEXT",
+            "optional": true
+        },
+        {
+            "name": "embeddingModel",
+            "label": "Embedding Model",
+            "helpText": "Name of the embedding model to use (e.g., text-embedding-ada-002)",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "openaiApiKey",
+            "label": "OpenAI API Key",
+            "helpText": "API key for OpenAI",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "helixUrl",
+            "label": "HelixDB base url",
+            "helpText": "URL",
+            "paramType": "TEXT"
+        },
+        {
+            "name": "helixEndpoint",
+            "label": "HelixDB endpoint",
+            "helpText": "endpoint",
+            "paramType": "TEXT"
+        }
+    ],
+    "streaming": true,
+    "supportsAtLeastOnce": false,
+    "supportsExactlyOnce": true,
+    "defaultStreamingMode": "STREAMING"
+}
