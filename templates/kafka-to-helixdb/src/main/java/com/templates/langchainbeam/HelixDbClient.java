@@ -9,11 +9,16 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class HelixDbClient {
+
+    private static final Logger logger = LoggerFactory.getLogger(HelixDbClient.class);
 
     private final String endpoint;
     private final String baseUrl;
@@ -36,9 +41,7 @@ public class HelixDbClient {
         String url = String.format("%s/%s", baseUrl, endpoint);
         String body = createRequest(vectors, content);
 
-        System.err.println("url: " + url);
-
-        System.out.println("req content: " + content);
+        logger.info("req content: {}", content);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -51,7 +54,7 @@ public class HelixDbClient {
         try {
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
-            System.out.println("Status code: " + response.statusCode());
+            logger.info("Status code: {}", response.statusCode());
 
         } catch (IOException | InterruptedException e) {
             throw e;
@@ -76,7 +79,8 @@ public class HelixDbClient {
         try {
             return objectMapper.writeValueAsString(rootNode);
         } catch (Exception e) {
-            return null;
+            logger.error("Failed to serialize request body", e);
+            throw new RuntimeException("Failed to serialize request body", e);
         }
     }
 

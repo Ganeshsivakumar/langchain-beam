@@ -5,7 +5,7 @@ set -e
 FLINK_VERSION="${FLINK_VERSION:-1.18}"
 
 # Base public GCS URL for your template jars
-BASE_GCS_URL="https://storage.googleapis.com/langbeam-cloud-staging/build/flink-templates/kafka-to-helixdb"
+BASE_GCS_URL="https://storage.googleapis.com/langbeam-cloud/build/flink-templates/kafka-to-helixdb"
 
 # Construct JAR URL based on version
 JAR_URL="${JAR_URL:-$BASE_GCS_URL/kafka-to-helixdb-flink-${FLINK_VERSION}.jar}"

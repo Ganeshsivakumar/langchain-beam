@@ -68,10 +68,12 @@ public interface KafkaToHelixDbPipelineOptions extends PipelineOptions {
 
     void setOpenaiApiKey(String key);
 
+    /** Helix DB base url */
     String getHelixUrl();
 
     void setHelixUrl(String url);
 
+    /** Helix db ingestion endpoint */
     String getHelixEndpoint();
 
     void setHelixEndpoint(String endpoint);
