@@ -109,6 +109,10 @@ Now the template is built and hosted your GCS path. you can pass GCS template fi
 
 If you have an Apache Flink standalone cluster, you can submit the template as a job using the prebuilt Docker image.
 
+> **Note:** Don’t have a remote Flink cluster? No problem! 
+> You can quickly spin up Flink on your laptop in just [3 simple steps](https://ganeshsivakumar.github.io/langchain-beam/docs/tutorials/setup-flink/) and run templates locally.
+
+
 ```
 docker run --rm \
   -e FLINK_MASTER=host.docker.internal:8081 \
