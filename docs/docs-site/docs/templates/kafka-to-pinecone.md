@@ -109,6 +109,15 @@ Now the template is built and hosted your GCS path. you can pass GCS template fi
 
 If you have an Apache Flink standalone cluster, you can submit the template as a job using the prebuilt Docker image.
 
+> **Note:** Don’t have a remote Flink cluster? No problem! 
+> You can quickly spin up Flink on your laptop in just [3 simple steps](https://ganeshsivakumar.github.io/langchain-beam/docs/tutorials/setup-flink/) and run templates locally.
+
+#### Submitting Job
+
+Once your Flink cluster is up and running, you can submit a template as a job using Docker.  
+Run the following command, adjusting the pipeline options as needed:
+
+
 ```
 docker run --rm \
   -e FLINK_MASTER=host.docker.internal:8081 \
@@ -137,7 +146,7 @@ Refer to the Flink version [compatibility matrix](https://beam.apache.org/docume
 
 - The container downloads the appropriate .jar file from GCS based on ***FLINK_VERSION*** (your flink cluster version) with correct beam and runner dependencies
 
-- It uses the Flink CLI (flink run) to submit the job to the Flink cluster (as specified by `FLINK_MASTER`)
+- It uses the Flink CLI (flink run) to submit the job to the Flink cluster (as specified by ***FLINK_MASTER*** - Flink cluster Url )
 
 - All dependencies—including Java 17 and the Flink CLI—are preinstalled in the image, so you don’t need to set up anything else.
 
