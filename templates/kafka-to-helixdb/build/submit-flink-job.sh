@@ -4,25 +4,19 @@ set -e
 # Default Flink version 
 FLINK_VERSION="${FLINK_VERSION:-1.18}"
 
-# Base public GCS URL for your template jars
-BASE_GCS_URL="https://storage.googleapis.com/langbeam-cloud/build/flink-templates/kafka-to-helixdb"
+# Default flink master
+FLINK_MASTER="${FLINK_MASTER:-localhost:8081}"
 
-# Construct JAR URL based on version
-JAR_URL="${JAR_URL:-$BASE_GCS_URL/kafka-to-helixdb-flink-${FLINK_VERSION}.jar}"
 
 # Download location for the JAR
 JAR_PATH="/tmp/kafka-to-helixdb.jar"
 
-
-echo "🔽 Downloading JAR for Flink $FLINK_VERSION from:"
-echo "$JAR_URL"
-curl -sSL -o "$JAR_PATH" "$JAR_URL"
-echo "✅ Downloaded to $JAR_PATH"
+echo "🔽 Downloading kafka-to-helixdb JAR for Flink $FLINK_VERSION..."
 
 
-# Submit job using Flink CLI 
+JAR_PATH=$(curl -fsSL https://templates.langbeam.cloud/kafka-to-helixdb.sh | bash -s -- "$FLINK_VERSION")
 
-FLINK_MASTER="${FLINK_MASTER:-localhost:8081}"
+echo "✅ Downloaded JAR to $JAR_PATH"
 
 echo "🚀 Submitting job using Flink CLI..."
 
