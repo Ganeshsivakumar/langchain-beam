@@ -31,7 +31,7 @@ public class PineconeWriter extends DoFn<EmbeddingOutput, Void> {
 
     @Setup
     public void setup() {
-        PineconeConfig config = new PineconeConfig(pineconeKey);
+        PineconeConfig config = new PineconeConfig(pineconeKey, "langbeam");
         config.setHost(hostUrl);
         this.connection = new PineconeConnection(config);
         this.index = new Index(connection, indexName);
