@@ -153,7 +153,7 @@ Refer to the Flink version [compatibility matrix](https://beam.apache.org/docume
 ### 3. LangBeam (Managed Cloud) 
 
 
-**LangBeam** is a fully managed platform for running Apache Beam pipelines, such as this Kafka-to-Pinecone template. Instead of dealing with infrastructure setup, runner configuration, provisioning resources, and scaling. You simply provide the required template parameters and start the pipeline.
+[**LangBeam**](https://www.langbeam.cloud/) is a fully managed platform for running Apache Beam pipelines, such as this Kafka-to-Pinecone template. Instead of dealing with infrastructure setup, runner configuration, provisioning resources, and scaling. You simply provide the required template parameters and start the pipeline.
 
 From that moment, your **AI agents and RAG applications** begin receiving real-time data — continuously, reliably, and at scale.
 
