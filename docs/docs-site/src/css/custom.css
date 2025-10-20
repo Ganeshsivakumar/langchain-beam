@@ -40,3 +40,74 @@
   --docusaurus-highlighted-code-line-bg: rgba(255, 131, 55, 0.3);
   /* Beam Orange 2 with transparency */
 }
+
+/* Navbar: Langbeam Cloud button - black background, white text, cloud icon */
+.navbar-cloud-button {
+  background-color: #000000;
+  color: #ffffff;
+  border-color: #000000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  line-height: 1.3;
+  font-weight: 700;
+  font-size: 0.95rem; /* slightly larger than default */
+  padding: 0.45rem 0.9rem; /* a bit more padding */
+  border-radius: 10px; /* slightly larger corners to match size */
+}
+
+.navbar-cloud-button:hover,
+.navbar-cloud-button:focus {
+  background-color: #111111;
+  border-color: #111111;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.navbar-cloud-button::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 0;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  /* White cloud SVG icon */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M19.36 10.46A7.5 7.5 0 0 0 5.5 8a5.5 5.5 0 0 0 .04 11h13a4.5 4.5 0 0 0 .82-8.87z'/></svg>");
+}
+
+/* Responsive: make the button more compact on small screens to preserve brand text */
+@media (max-width: 996px) {
+  .navbar-cloud-button {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 8px;
+    gap: 0.3rem;
+  }
+
+  .navbar-cloud-button::before {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Extra small screens: keep only icon to avoid truncating brand text */
+@media (max-width: 768px) {
+  .navbar-cloud-button {
+    font-size: 0; /* hide text while keeping accessible name */
+    padding: 0.55rem; /* larger touch target on mobile */
+    border-radius: 12px;
+    gap: 0; /* no gap needed when text is hidden */
+  }
+
+  .navbar-cloud-button::before {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Hide external-link icon next to the label in mobile */
+  .navbar-cloud-button .iconExternalLink {
+    display: none !important;
+  }
+}
