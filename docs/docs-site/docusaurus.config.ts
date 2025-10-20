@@ -94,6 +94,12 @@ const config: Config = {
         },
         //{ to: "/blog", label: "Blog", position: "left" },
         {
+          href: "https://www.langbeam.cloud/",
+          label: "Langbeam Cloud",
+          position: "right",
+          className: "button navbar-cloud-button"
+        },
+        {
           href: "https://javadoc.io/doc/io.github.ganeshsivakumar/langchain-beam/latest/index.html",
           label: "Javadoc",
           position: "right",
